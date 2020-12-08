@@ -27,6 +27,6 @@ namespace APICatologo.Models
         public DateTime DataCadastro { get; set; }
         // Propriedade de navegação
         public Categoria Categoria { get; set; }
-        public int CategoriaID { get; set; }
+        public int CategoriaId { get; set; }
     }
 }
