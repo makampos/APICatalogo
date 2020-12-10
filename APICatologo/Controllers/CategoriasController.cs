@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
 using APICatologo.Context;
 using APICatologo.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +27,15 @@ namespace APICatologo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            return _context.Categorias.AsNoTracking().ToList();
+            try
+            {
+                return _context.Categorias.AsNoTracking().ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error ao retornar as categorias do banco de dados");
+            }           
         }
         
         /// <summary>
@@ -37,7 +46,16 @@ namespace APICatologo.Controllers
         [Route("produtos")]
         public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
-            return _context.Categorias.Include(x => x.Produtos).ToList();
+            try
+            {
+                return _context.Categorias.Include(x => x.Produtos).ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao retornar as categorias do banco de dados");
+            }
+           
         }
 
         /// <summary>
@@ -48,12 +66,20 @@ namespace APICatologo.Controllers
         [HttpGet("{id}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id)
         {
-            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
-            if (categoria == null)
+            try
             {
-                return NotFound();
+                var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
+                if (categoria == null)
+                {
+                    return NotFound($"A categoria com o id ={id} não foi encontrada");
+                }
+                return categoria;
             }
-            return categoria;
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao retornar a categoria do banco de dados" );
+            }
         }
 
         /// <summary>
@@ -64,9 +90,17 @@ namespace APICatologo.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] Categoria categoria)
         {
-            _context.Categorias.Add(categoria);
-            _context.SaveChanges();
-            return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoria);
+            try
+            {
+                _context.Categorias.Add(categoria);
+                _context.SaveChanges();
+                return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoria);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao tentar criar uma nova categoria");
+            }
         }
 
         /// <summary>
@@ -78,13 +112,21 @@ namespace APICatologo.Controllers
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] Categoria categoria)
         {
-            if (id != categoria.CategoriaId)
+            try
             {
-                return BadRequest();
+                if (id != categoria.CategoriaId)
+                {
+                    return BadRequest($"Não foi possível atualizar a categoria com o id={id}");
+                }
+                _context.Entry(categoria).State = EntityState.Modified;
+                _context.SaveChanges();
+                return Ok($"A categoria com o id= {id} foi atualizada com sucesso");
             }
-            _context.Entry(categoria).State = EntityState.Modified;
-            _context.SaveChanges();
-            return Ok();
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao atualizar a categoria com o id= {id}");
+            }
         }
 
         /// <summary>
@@ -95,14 +137,22 @@ namespace APICatologo.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Categoria> Delete(int id)
         {
-            var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
-            if(categoria == null)
+            try
             {
-                return NotFound();
+                var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
+                if (categoria == null)
+                {
+                    return NotFound($"A categoria com o id={id} não foi encontrada");
+                }
+                _context.Categorias.Remove(categoria);
+                _context.SaveChanges();
+                return categoria;
             }
-            _context.Categorias.Remove(categoria);
-            _context.SaveChanges();
-            return categoria;
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao excluir a categoria com id= {id}");
+            }
         }
     }
 }
