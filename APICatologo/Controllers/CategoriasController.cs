@@ -28,6 +28,17 @@ namespace APICatologo.Controllers
         {
             return _context.Categorias.AsNoTracking().ToList();
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Retorna listas de categorias e produtos relacionados</returns>
+        [HttpGet]
+        [Route("produtos")]
+        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
+        {
+            return _context.Categorias.Include(x => x.Produtos).ToList();
+        }
 
         /// <summary>
         /// Retorna uma categoria pelo seu identificador
