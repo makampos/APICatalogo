@@ -56,6 +56,9 @@ namespace APICatologo.Controllers
         [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
         public async Task<ActionResult<Produto>> Get(int id)
         {
+            // Teste Middleware de exception
+            //throw new Exception("Exception ao retornar produto pelo id");
+
             var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
             if (produto == null)
             {

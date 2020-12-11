@@ -1,4 +1,5 @@
 using APICatologo.Context;
+using APICatologo.Extensions;
 using APICatologo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,6 +41,9 @@ namespace APICatologo
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Adiciona middleware de tratamento de erros
+            app.ConfigureExeceptionHandler();
 
             app.UseRouting();
 
