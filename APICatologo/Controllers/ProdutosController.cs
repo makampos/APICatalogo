@@ -25,8 +25,8 @@ namespace APICatologo.Controllers
         /// </summary>
         /// <returns>Produtos</returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get() {
-            return _context.Produtos.AsNoTracking().ToList();
+        public async Task<ActionResult<IEnumerable<Produto>>> Get() {
+            return await _context.Produtos.AsNoTracking().ToListAsync();
         }
 
         /// <summary>
@@ -34,10 +34,10 @@ namespace APICatologo.Controllers
         /// </summary>
         /// <param name="id">Identificador do produto</param>
         /// <returns>Produto</returns>
-        [HttpGet("{id}", Name = "ObterProduto")]
-        public ActionResult<Produto> Get(int id)
+        [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
+        public async Task<ActionResult<Produto>> Get(int id)
         {
-            var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
+            var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
             if (produto == null)
             {
                 return NotFound();
