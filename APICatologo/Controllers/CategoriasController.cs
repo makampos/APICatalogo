@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using APICatologo.Context;
 using APICatologo.Models;
+using APICatologo.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,19 @@ namespace APICatologo.Controllers
         public CategoriasController(AppDbContext context)
         {
             _context = context;
+        }
+
+
+        /// <summary>
+        /// Exempo de injeção de depedência através de um serviço
+        /// </summary>
+        /// <param name="meuservico"></param>
+        /// <param name="nome"></param>
+        /// <returns></returns>
+        [HttpGet("saudacao/{nome}")]
+        public ActionResult<string> GetSaudacao([FromServices] IMeuServico meuservico, string nome)
+        {
+            return meuservico.Saudacao(nome);
         }
 
         /// <summary>

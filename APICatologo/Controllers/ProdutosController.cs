@@ -7,6 +7,7 @@ using APICatologo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace APICatologo.Controllers
 {
@@ -15,9 +16,27 @@ namespace APICatologo.Controllers
     public class ProdutosController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public ProdutosController(AppDbContext contexto)
+        private readonly IConfiguration _configuration;
+        public ProdutosController(AppDbContext contexto, IConfiguration config)
         {
             _context = contexto;
+            _configuration = config;
+        }
+
+        /// <summary>
+        /// Através da injeção de depedência (private readonly IConfiguration _configuration), retorna valores 
+        /// do arquivo appsettings.json       
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/settings")] // Acessa a rota sem a necessidade do /api/abcd
+        public string  GetAutor()
+        {
+            var autor = _configuration["autor"];
+            var conexao = _configuration["ConnectionStrings:DefaultConnection"];
+            return $"Autor: {autor} \n" +
+                $"String de conexão: {conexao} ";
+           
         }
 
         /// <summary>
