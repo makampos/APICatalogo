@@ -59,6 +59,9 @@ namespace APICatologo.Controllers
             // Teste Middleware de exception
             //throw new Exception("Exception ao retornar produto pelo id");
 
+            //string[] teste = null;
+            //if(teste.Length > 0) { }
+
             var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
             if (produto == null)
             {
