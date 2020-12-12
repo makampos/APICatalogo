@@ -1,5 +1,6 @@
 using APICatologo.Context;
 using APICatologo.Extensions;
+using APICatologo.Repository;
 using APICatologo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,11 +24,13 @@ namespace APICatologo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<AppDbContext>(options => options.UseMySql
             (Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IMeuServico, MeuServico>();
 
-            services.AddControllers().AddNewtonsoftJson(options => {
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
