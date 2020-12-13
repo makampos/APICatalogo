@@ -11,6 +11,12 @@ namespace APICatologo.Repository
         private ProdutoRepository _produtoRepo;
         private CategoriaRepository _categoriaRepo;
         public AppDbContext _context;
+
+        public UnitOfWork(AppDbContext contexto)
+        {
+            _context = contexto;
+        }
+
         public IProdutoRepository ProdutoRepository
         {
             get

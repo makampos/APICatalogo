@@ -8,6 +8,6 @@ namespace APICatologo.Repository
 {
     public interface ICategoriaRepository : IRepository<Categoria>
     {
-        IEnumerable<Categoria> GetCategoriasProduto();
+        IEnumerable<Categoria> GetCategoriasProdutos();
     }
 }

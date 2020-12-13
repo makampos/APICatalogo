@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using APICatologo.Context;
 using APICatologo.Models;
 using APICatologo.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace APICatologo.Controllers
@@ -21,10 +21,19 @@ namespace APICatologo.Controllers
             _configuration = config;
         }
 
-        [HttpGet("menorpreco")]     
+        [HttpGet("menorpreco")]
         public ActionResult<IEnumerable<Produto>> GetProdutosPrecos()
         {
-            return _uof.ProdutoRepository.GetProdutosPorPreco().ToList();
+            try
+            {
+                return _uof.ProdutoRepository.GetProdutosPorPreco().ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao retornar os produtos do banco de dados");
+            }
+
         }
 
         [HttpGet]
