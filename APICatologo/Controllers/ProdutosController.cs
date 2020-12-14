@@ -50,7 +50,6 @@ namespace APICatologo.Controllers
         public ActionResult<IEnumerable<ProdutoDTO>> Get([FromQuery] ProdutosParameters produtosParameters)
         {
             var produtos = _uof.ProdutoRepository.GetProdutos(produtosParameters);
-
             var metadata = new
             {
                 produtos.TotalCount,
