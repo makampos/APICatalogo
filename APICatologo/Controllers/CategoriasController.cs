@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using APICatologo.DTOs;
 using APICatologo.Models;
+using APICatologo.Pagination;
 using APICatologo.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 namespace APICatologo.Controllers
 {
@@ -17,6 +20,8 @@ namespace APICatologo.Controllers
         private readonly IUnitOfWork _uof;
         private readonly IMapper _mapper;
 
+        public StringValues JsonConver { get; private set; }
+
         public CategoriasController(IUnitOfWork contexto, IMapper mapper)
         {
             _uof = contexto;
@@ -24,11 +29,23 @@ namespace APICatologo.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CategoriaDTO>> Get()
+        public ActionResult<IEnumerable<CategoriaDTO>> Get( [FromQuery] CategoriasParameters categoriaParameters)
         {
             try
             {
-                var categorias = _uof.CategoriaRepository.Get().ToList();
+                var categorias = _uof.CategoriaRepository.GetCategorias(categoriaParameters);
+                var metadata = new
+                {
+                    categorias.TotalCount,
+                    categorias.PageSize,
+                    categorias.CurrentPage,
+                    categorias.TotalPages,
+                    categorias.HasNext,
+                    categorias.HasPrevious
+                };
+
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
                 var categoriasDto = _mapper.Map<List<CategoriaDTO>>(categorias);
 
                 return categoriasDto;

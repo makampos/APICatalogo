@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using APICatologo.Context;
 using APICatologo.Models;
+using APICatologo.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace APICatologo.Repository
@@ -13,6 +12,16 @@ namespace APICatologo.Repository
         public CategoriaRepository(AppDbContext contexto) : base(contexto)
         {
         }
+
+        public PagedList<Categoria> GetCategorias(CategoriasParameters categoriaParameters)
+        {
+            return PagedList<Categoria>.ToPagedList(
+                Get().OrderBy(on => on.Nome),
+                categoriaParameters.PageNumber,
+                categoriaParameters.PageSize
+                );
+        }
+
         public IEnumerable<Categoria> GetCategoriasProdutos()
         {
             return Get().Include(x => x.Produtos);
