@@ -89,7 +89,7 @@ namespace APICatologo.Controllers
                 _uof.Commit();
 
                 var categoriaDTO = _mapper.Map<CategoriaDTO>(categoria);
-                return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoriaDto);
+                return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoriaDTO);
             }
             catch (Exception)
             {
