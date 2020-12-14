@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using APICatologo.Context;
 using APICatologo.Models;
 using APICatologo.Pagination;
@@ -13,18 +14,18 @@ namespace APICatologo.Repository
         {
         }
 
-        public PagedList<Categoria> GetCategorias(CategoriasParameters categoriaParameters)
+        public async Task<PagedList<Categoria>> GetCategorias(CategoriasParameters categoriaParameters)
         {
-            return PagedList<Categoria>.ToPagedList(
+            return await PagedList<Categoria>.ToPagedList(
                 Get().OrderBy(on => on.Nome),
                 categoriaParameters.PageNumber,
                 categoriaParameters.PageSize
                 );
         }
 
-        public IEnumerable<Categoria> GetCategoriasProdutos()
+        public async Task<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
-            return Get().Include(x => x.Produtos);
+            return await Get().Include(x => x.Produtos).ToListAsync();
         }
     }
 }
