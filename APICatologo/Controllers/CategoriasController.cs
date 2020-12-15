@@ -7,6 +7,7 @@ using APICatologo.Models;
 using APICatologo.Pagination;
 using APICatologo.Repository;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -14,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace APICatologo.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriasController : Controller

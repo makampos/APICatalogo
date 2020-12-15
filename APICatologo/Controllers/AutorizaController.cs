@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using APICatologo.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace APICatologo.Controllers
 {
@@ -15,10 +17,13 @@ namespace APICatologo.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        public AutorizaController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        private readonly IConfiguration _configuration;
+        public AutorizaController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -28,7 +33,8 @@ namespace APICatologo.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody] UsuarioDTO model) {
+        public async Task<ActionResult> RegisterUser([FromBody] UsuarioDTO model)
+        {
             var user = new IdentityUser
             {
                 UserName = model.Email,
@@ -38,13 +44,13 @@ namespace APICatologo.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
             await _signInManager.SignInAsync(user, false);
 
-            return Ok();
+            return Ok(GeraToken(model));
         }
 
         [HttpPost("login")]
@@ -54,13 +60,51 @@ namespace APICatologo.Controllers
                 userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                return Ok();
-            } 
+                return Ok(GeraToken(userInfo));
+            }
             else
             {
                 ModelState.AddModelError(string.Empty, "Login inválido....");
                 return BadRequest(ModelState);
             }
+        }
+
+        private UsuarioToken GeraToken(UsuarioDTO userInfo)
+        {
+            //define declarações do usuário
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
+                new Claim("meuPet","kira"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            //gera uma chave com base em um algoritmo simetrico
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
+
+            //Gera a assinatura digital do token usando o algoritmo Hmac e a chave privada
+            var credenciais = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            //tempo de experição do token
+            var expiracao = _configuration["TokenConfiguration:ExpireHours"];
+            var expiration = DateTime.UtcNow.AddHours(double.Parse(expiracao));
+
+            //classe que representa um token JWT e gera o token
+            JwtSecurityToken token = new JwtSecurityToken(
+                issuer: _configuration["TokenConfiguration:Issuer"],
+                audience: _configuration["TokenConfiguration:Audience"],
+                claims: claims,
+                expires: expiration,
+                signingCredentials: credenciais);
+
+            // retorna os dados com o token e as informações
+            return new UsuarioToken()
+            {
+                Authenticated = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = expiration,
+                Message = "Token JWT OK"
+            };
         }
     }
 }
