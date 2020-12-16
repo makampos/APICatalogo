@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using APICatologo.Context;
 using APICatologo.DTOs.Mappings;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace APICatologo
 {
@@ -64,7 +66,29 @@ namespace APICatologo
                     ValidIssuer = Configuration["TokenConfiguration:Issuer"],
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:key"]))
-                });                                               
+                });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "APICatalogo",
+                    Description = "Catálogo de Produtos e Categorias",
+                    TermsOfService = new Uri("https://faketermsofservice.net.gg"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "developer",
+                        Email = "developer@dev.com",
+                        Url = new Uri ("https://wwww.developer2077.net")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Usar sobre LICX",
+                        Url  = new Uri("https://wwww.developer2077.net/license")
+                    }
+                });
+            });
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -92,6 +116,14 @@ namespace APICatologo
             app.UseAuthorization();
 
             app.UseCors(options => options.AllowAnyOrigin());
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c => 
+            {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                        "API Cátalogo de Produtos e Categorias");
+            });
 
             app.UseEndpoints(endpoints =>
             {
