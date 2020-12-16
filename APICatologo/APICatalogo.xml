@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>APICatalogo</name>
+    </assembly>
+    <members>
+        <member name="M:APICatologo.Controllers.AutorizaController.RegisterUser(APICatologo.DTOs.UsuarioDTO)">
+            <summary>
+            Registra um novo usuário
+            </summary>
+            <param name="model">Um Objeto UsuarioDTO</param>
+            <returns>Status 2000 e o token para o cliente</returns>
+        </member>
+        <member name="M:APICatologo.Controllers.AutorizaController.Login(APICatologo.DTOs.UsuarioDTO)">
+            <summary>
+            Verifica as credenciais de um usuário
+            </summary>
+            <param name="userInfo">Um objeto do tipo UsuarioDTO</param>
+            <returns>Status 200 e o token para o cliente</returns>
+            <remarks>retorna o Status 200 e o token</remarks>
+        </member>
+        <member name="M:APICatologo.Controllers.CategoriasController.Get(System.Int32)">
+            <summary>
+            Obtem uma Categoria pelo seu Id
+            </summary>
+            <param name="id">codigo da categoria</param>
+            <returns>Objetos Categoria</returns>
+        </member>
+        <member name="M:APICatologo.Controllers.CategoriasController.Post(APICatologo.DTOs.CategoriaDTO)">
+            <summary>
+            Inclui uma nova categoria
+            </summary>
+            <remarks>
+            Exemplo de request:
+            
+                POST api/categorias
+                {
+                    "categoriaId": 1,
+                    "nome": "categoria1",
+                    "imagemUrl": "https//teste.net.jpg"
+                }
+            </remarks>
+            <param name="categoriaDto">Objeto categoria</param>
+            <returns>O objeto categoria incluida</returns>
+            <remkarks>Retorna um objeto Categoria incluída</remkarks>
+        </member>
+        <member name="M:APICatologo.Controllers.ProdutosController.Get(APICatologo.Pagination.ProdutosParameters)">
+            <summary>
+            Exibe uma relação de produtos
+            </summary>
+            <param name="produtosParameters">Retorna uma lista de objetos Produto</param>
+            <returns></returns>
+        </member>
+        <member name="M:APICatologo.Controllers.ProdutosController.Get(System.Int32)">
+            <summary>
+            Obtem um produto pelo seu identificador produtoId
+            </summary>
+            <param name="id">Codigo do produto</param>
+            <returns>Um objeto Produto</returns>
+        </member>
+        <member name="T:APICatologo.Extensions.ApiExceptionMiddlewareExtensions">
+            <summary>
+             Configura uma método estático que retorna detalhes de uma exception
+            </summary>
+        </member>
+        <member name="M:APICatologo.Models.Produto.Validate(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Implementa a interface IValidatableObject para costumizar uma validação no modelo
+            ! não permite reuso ao contrario da implementação da ValidationAttribute na pasta Validations.
+            </summary>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:APICatologo.Validations.PrimeiraLetraMaiusculaAttribute">
+            <summary>
+            Validação customizada utilizando DataAnnotations
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -47,6 +47,11 @@ namespace APICatologo.Controllers
 
         }
 
+        /// <summary>
+        /// Exibe uma relação de produtos
+        /// </summary>
+        /// <param name="produtosParameters">Retorna uma lista de objetos Produto</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get([FromQuery] ProdutosParameters produtosParameters)
         {
@@ -68,6 +73,11 @@ namespace APICatologo.Controllers
             return produtosDTO;
         }
 
+        /// <summary>
+        /// Obtem um produto pelo seu identificador produtoId
+        /// </summary>
+        /// <param name="id">Codigo do produto</param>
+        /// <returns>Um objeto Produto</returns>
         [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
         public async Task<ActionResult<ProdutoDTO>> Get(int id)
         {

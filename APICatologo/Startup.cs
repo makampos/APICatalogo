@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using APICatologo.Context;
 using APICatologo.DTOs.Mappings;
@@ -56,7 +58,7 @@ namespace APICatologo
             //valida o emissor, a audiencia e a chave
             //usando a chave secreta valida e assinatura
             services.AddAuthentication(
-                JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
+                JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -80,14 +82,17 @@ namespace APICatologo
                     {
                         Name = "developer",
                         Email = "developer@dev.com",
-                        Url = new Uri ("https://wwww.developer2077.net")
+                        Url = new Uri("https://wwww.developer2077.net")
                     },
                     License = new OpenApiLicense
                     {
                         Name = "Usar sobre LICX",
-                        Url  = new Uri("https://wwww.developer2077.net/license")
+                        Url = new Uri("https://wwww.developer2077.net/license")
                     }
                 });
+                var xmlFle = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFle);
+                c.IncludeXmlComments(xmlPath);
             });
 
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -119,11 +124,13 @@ namespace APICatologo
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(c => 
+            app.UseSwaggerUI(c =>
             {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                        "API Cátalogo de Produtos e Categorias");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "API Cátalogo de Produtos e Categorias");
             });
+
+            
 
             app.UseEndpoints(endpoints =>
             {
