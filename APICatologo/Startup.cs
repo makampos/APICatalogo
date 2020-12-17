@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -93,6 +94,42 @@ namespace APICatologo
                 var xmlFle = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFle);
                 c.IncludeXmlComments(xmlPath);
+
+                // Adiciona autenticação na documentação do swagger
+                //var security = new Dictionary<string, IEnumerable<string>>
+                //{
+                //    {
+                //        "Bearer", new string[] {}
+                //    },
+                //};
+                c.AddSecurityDefinition(
+                        "Bearer",
+                        new OpenApiSecurityScheme
+                        {
+                            In = ParameterLocation.Header,
+                            Description = "Copiar,'bearer' + token'",
+                            Scheme = "Bearer",
+                            BearerFormat = "JWT",
+                            Name = "Authorization",
+                            Type = SecuritySchemeType.ApiKey
+                        });
+
+                c.AddSecurityRequirement( new OpenApiSecurityRequirement 
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                                
+                            },
+                        },
+                        new List<string>()
+                    }
+                });
+
             });
 
             services.AddControllers().AddNewtonsoftJson(options =>
