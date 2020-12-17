@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace APICatologo.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class AutorizaController : ControllerBase

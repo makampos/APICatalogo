@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace APICatologo.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProdutosController : ControllerBase

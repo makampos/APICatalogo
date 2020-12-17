@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace APICatologo.Controllers
 {
+    [Produces("application/json")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
