@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using APICatologo.DTOs;
 using APICatologo.Models;
@@ -15,6 +14,7 @@ using Newtonsoft.Json;
 
 namespace APICatologo.Controllers
 {
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]

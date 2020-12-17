@@ -85,6 +85,8 @@ namespace APICatologo.Controllers
         /// <param name="id">codigo da categoria</param>
         /// <returns>Objetos Categoria</returns>
         [HttpGet("{id}", Name = "ObterCategoria")]
+        [ProducesResponseType(typeof(ProdutoDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CategoriaDTO>> Get(int id)
         {
             try
@@ -122,6 +124,9 @@ namespace APICatologo.Controllers
         /// <returns>O objeto categoria incluida</returns>
         /// <remkarks>Retorna um objeto Categoria incluída</remkarks>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post([FromBody] CategoriaDTO categoriaDto)
         {
             try
@@ -140,6 +145,7 @@ namespace APICatologo.Controllers
             }
         }
 
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] CategoriaDTO categoriaDto)
         {
