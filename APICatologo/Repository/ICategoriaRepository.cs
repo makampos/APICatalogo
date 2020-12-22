@@ -9,5 +9,7 @@ namespace APICatologo.Repository
     {
         Task<PagedList<Categoria>> GetCategorias(CategoriasParameters categoriasParameters);
         Task<IEnumerable<Categoria>> GetCategoriasProdutos();
+        // Para teste unitario
+        Task<IEnumerable<Categoria>> GetCategorias();
     }
 }

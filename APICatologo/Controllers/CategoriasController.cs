@@ -32,6 +32,28 @@ namespace APICatologo.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Para teste unitario
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("categoriasUnitTest")]
+        public ActionResult<IEnumerable<CategoriaDTO>> Get()
+        {
+            try
+            {
+                var categorias =   _uof.CategoriaRepository.Get().ToList();
+                var categoriasDto = _mapper.Map<List<CategoriaDTO>>(categorias);
+                return categoriasDto;
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get( [FromQuery] CategoriasParameters categoriaParameters)
         {
@@ -79,19 +101,43 @@ namespace APICatologo.Controllers
             }
         }
 
+
         /// <summary>
         /// Obtem uma Categoria pelo seu Id
         /// </summary>
         /// <param name="id">codigo da categoria</param>
         /// <returns>Objetos Categoria</returns>
+        //[HttpGet("{id}", Name = "ObterCategoria")]
+        //[ProducesResponseType(typeof(ProdutoDTO), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public async Task<ActionResult<CategoriaDTO>> Get(int id)
+        //{
+        //    try
+        //    {
+        //        var categoria = await _uof.CategoriaRepository.GetById(p => p.CategoriaId == id);
+        //        if (categoria == null)
+        //        {
+        //            return NotFound($"A categoria com o id ={id} não foi encontrada");
+        //        }
+
+        //        var categoriaDTo = _mapper.Map<CategoriaDTO>(categoria);
+        //        return categoriaDTo;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao retornar a categoria do banco de dados");
+        //    }
+        //}
+
+
+        // para teste unitario
         [HttpGet("{id}", Name = "ObterCategoria")]
-        [ProducesResponseType(typeof(ProdutoDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CategoriaDTO>> Get(int id)
+        public ActionResult<CategoriaDTO> Get(int id)
         {
             try
             {
-                var categoria = await _uof.CategoriaRepository.GetById(p => p.CategoriaId == id);
+                var categoria =  _uof.CategoriaRepository.GetById(p => p.CategoriaId == id);
                 if (categoria == null)
                 {
                     return NotFound($"A categoria com o id ={id} não foi encontrada");

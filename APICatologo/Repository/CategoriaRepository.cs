@@ -23,6 +23,12 @@ namespace APICatologo.Repository
                 );
         }
 
+        // para teste
+        public  async Task<IEnumerable<Categoria>> GetCategorias()
+        {
+            return await  Get().OrderBy(c => c.Nome).ToListAsync();
+        }
+
         public async Task<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
             return await Get().Include(x => x.Produtos).ToListAsync();

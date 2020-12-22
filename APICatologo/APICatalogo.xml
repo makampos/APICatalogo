@@ -19,6 +19,12 @@
             <returns>Status 200 e o token para o cliente</returns>
             <remarks>retorna o Status 200 e o token</remarks>
         </member>
+        <member name="M:APICatologo.Controllers.CategoriasController.Get">
+            <summary>
+            Para teste unitario
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:APICatologo.Controllers.CategoriasController.Get(System.Int32)">
             <summary>
             Obtem uma Categoria pelo seu Id
