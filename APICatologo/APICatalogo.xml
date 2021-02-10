@@ -25,6 +25,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:APICatologo.Controllers.CategoriasController.GetTeste">
+            <summary>
+            Teste API para usuário não autenticado
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:APICatologo.Controllers.CategoriasController.Get(System.Int32)">
             <summary>
             Obtem uma Categoria pelo seu Id

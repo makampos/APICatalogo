@@ -7,6 +7,7 @@ using APICatologo.Models;
 using APICatologo.Pagination;
 using APICatologo.Repository;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +16,8 @@ using Newtonsoft.Json;
 
 namespace APICatologo.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriasController : Controller
@@ -51,6 +52,17 @@ namespace APICatologo.Controllers
 
                 return BadRequest();
             }
+        }
+
+        /// <summary>
+        /// Teste API para usuário não autenticado
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("teste")]
+       public string GetTeste()
+        {
+            return $"CategoriasController - {DateTime.Now.ToLongDateString().ToString()}";
         }
 
 
